@@ -66,12 +66,14 @@ const App = () => {
         name={ROUTES.logIn.getName()}
         options={{
           headerShown: false,
+          animation: "simple_push",
         }}
       />
       <Stack.Screen
         name={ROUTES.register.getName()}
         options={{
           headerShown: false,
+          animation: "simple_push",
         }}
       />
     </Stack>
