@@ -22,4 +22,5 @@ export const ROUTES = {
   notesList: new Route("/(tabs)/notes-list"),
   notesMap: new Route("/(tabs)/notes-map"),
   noteDetails: new Route("/note-details"),
+  welcome: new Route("/welcome"),
 };

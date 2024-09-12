@@ -1,7 +1,27 @@
+import { useEffect, useState } from "react";
+import { Tabs, useRouter } from "expo-router";
+
 import { ROUTES } from "@/constants/routes";
-import { Tabs } from "expo-router";
 
 const TabLayout = () => {
+  // hooks
+  const router = useRouter();
+
+  // states
+  const [initialRender, setInitialRender] = useState<boolean>(true);
+
+  // effects
+  useEffect(() => {
+    setInitialRender(false);
+  }, []);
+
+  useEffect(() => {
+    if (!initialRender) {
+      router.push(ROUTES.welcome.getHref());
+    }
+  }, [initialRender]);
+
+  // render
   return (
     <Tabs initialRouteName={ROUTES.notesList.getName()}>
       <Tabs.Screen

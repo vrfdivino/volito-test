@@ -49,6 +49,14 @@ const App = () => {
       <Stack.Screen name="index" />
       <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
       <Stack.Screen name={ROUTES.noteDetails.getName()} />
+      <Stack.Screen
+        name={ROUTES.welcome.getName()}
+        options={{
+          presentation: "transparentModal",
+          headerShown: false,
+          animation: "fade",
+        }}
+      />
     </Stack>
   );
 };
