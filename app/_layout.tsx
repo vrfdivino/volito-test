@@ -68,6 +68,12 @@ const App = () => {
           headerShown: false,
         }}
       />
+      <Stack.Screen
+        name={ROUTES.register.getName()}
+        options={{
+          headerShown: false,
+        }}
+      />
     </Stack>
   );
 };

@@ -24,4 +24,5 @@ export const ROUTES = {
   noteDetails: new Route("/note-details"),
   welcome: new Route("/welcome"),
   logIn: new Route("/log-in"),
+  register: new Route("/register"),
 };

@@ -1,13 +1,12 @@
 import { useRouter } from "expo-router";
 import { Pressable, Text, View } from "react-native";
-import { signInWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword } from "firebase/auth";
 
 import { auth } from "@/services/firebase";
 import { ROUTES } from "@/constants/routes";
 
-const LogInScreen = () => {
+const RegisterScreen = () => {
   const router = useRouter();
-
   return (
     <View
       style={{
@@ -18,24 +17,24 @@ const LogInScreen = () => {
     >
       <Pressable
         onPress={() => {
-          signInWithEmailAndPassword(
+          createUserWithEmailAndPassword(
             auth,
-            "vrfdivino@gmail.com",
+            "divinovon@gmail.com",
             "Password123$"
           );
         }}
       >
-        <Text>Login</Text>
+        <Text>register</Text>
       </Pressable>
       <Pressable
         onPress={() => {
-          router.replace(ROUTES.register.getHref());
+          router.replace(ROUTES.logIn.getHref());
         }}
       >
-        <Text>New here?</Text>
+        <Text>login</Text>
       </Pressable>
     </View>
   );
 };
 
-export default LogInScreen;
+export default RegisterScreen;
