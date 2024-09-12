@@ -1,10 +1,15 @@
-import { useNotesStore } from "@/stores/NotesStore";
-import { observer } from "mobx-react-lite";
 import { View } from "react-native";
+import { observer } from "mobx-react-lite";
 import MapView, { Marker } from "react-native-maps";
 
+import { useNotesStore } from "@/stores/NotesStore";
+import AddNoteButton from "@/components/AddNoteButton";
+
 const NotesMapScreen = () => {
+  // hooks
   const { notes } = useNotesStore();
+
+  // render
   return (
     <View
       style={{
@@ -22,6 +27,7 @@ const NotesMapScreen = () => {
           />
         ))}
       </MapView>
+      <AddNoteButton />
     </View>
   );
 };

@@ -1,17 +1,22 @@
-import { useUserStore } from "@/stores/UserStore";
+import { useEffect } from "react";
 import { Stack } from "expo-router";
 import { observer } from "mobx-react-lite";
-import { useEffect } from "react";
 import { ActivityIndicator } from "react-native";
 import { onAuthStateChanged } from "firebase/auth";
+import { collection, onSnapshot, query, where } from "firebase/firestore";
+
 import { auth, db } from "@/services/firebase";
+import { ROUTES } from "@/constants/routes";
+import { TABLES } from "@/constants/tables";
+import { useUserStore } from "@/stores/UserStore";
 import { INote, useNotesStore } from "@/stores/NotesStore";
-import { collection, doc, onSnapshot, query, where } from "firebase/firestore";
 
 const App = () => {
-  const { init: initUser, loading: loadingUser, user } = useUserStore();
-  const { init: initNotes, loading: loadingNotes } = useNotesStore();
+  // hooks
+  const { init: initUser, loading, user } = useUserStore();
+  const { init: initNotes } = useNotesStore();
 
+  // effects
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
       initUser(user);
@@ -22,7 +27,7 @@ const App = () => {
     if (!user) return;
 
     const unsub = onSnapshot(
-      query(collection(db, "notes"), where("userId", "==", user.id)),
+      query(collection(db, TABLES.notes), where("userId", "==", user.id)),
       ({ docs }) => {
         const notes: INote[] = [];
         docs.forEach((doc) => notes.push(doc.data() as unknown as INote));
@@ -35,17 +40,15 @@ const App = () => {
     };
   }, [user]);
 
-  const loading = loadingUser || loadingNotes;
-
+  // render
   if (loading) {
     return <ActivityIndicator />;
   }
-
   return (
     <Stack initialRouteName="(tabs)">
       <Stack.Screen name="index" />
-      <Stack.Screen name="note-details" />
       <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+      <Stack.Screen name={ROUTES.noteDetails.getName()} />
     </Stack>
   );
 };

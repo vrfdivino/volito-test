@@ -1,8 +1,9 @@
+import { ROUTES } from "@/constants/routes";
 import { Tabs } from "expo-router";
 
 const TabLayout = () => {
   return (
-    <Tabs initialRouteName="notes-list">
+    <Tabs initialRouteName={ROUTES.notesList.getName()}>
       <Tabs.Screen
         name="index"
         options={{
@@ -11,13 +12,13 @@ const TabLayout = () => {
         }}
       />
       <Tabs.Screen
-        name="notes-list"
+        name={ROUTES.notesList.getName()}
         options={{
           title: "Notes (list)",
         }}
       />
       <Tabs.Screen
-        name="notes-map"
+        name={ROUTES.notesMap.getName()}
         options={{
           title: "Notes (map)",
         }}

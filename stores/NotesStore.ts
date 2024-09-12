@@ -11,6 +11,7 @@ const Note = types.model({
   body: types.string,
   userId: types.string,
   location: NoteLocation,
+  dateCreated: types.string,
 });
 
 const NotesStore = types
@@ -20,7 +21,14 @@ const NotesStore = types
   })
   .actions((self) => ({
     init: (notes: INote[]) => {
+      self.loading = true;
       applySnapshot(self.notes, notes);
+      self.loading = false;
+    },
+  }))
+  .views((self) => ({
+    getNoteById(id: string) {
+      return self.notes.find((note) => note.id === id);
     },
   }));
 
