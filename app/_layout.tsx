@@ -1,13 +1,13 @@
 import { useEffect } from "react";
-import { Stack } from "expo-router";
 import { observer } from "mobx-react-lite";
+import { Stack, useRouter } from "expo-router";
 import { ActivityIndicator } from "react-native";
 import { onAuthStateChanged } from "firebase/auth";
 import { collection, onSnapshot, query, where } from "firebase/firestore";
 
-import { auth, db } from "@/services/firebase";
 import { ROUTES } from "@/constants/routes";
 import { TABLES } from "@/constants/tables";
+import { auth, db } from "@/services/firebase";
 import { useUserStore } from "@/stores/UserStore";
 import { INote, useNotesStore } from "@/stores/NotesStore";
 
@@ -15,11 +15,16 @@ const App = () => {
   // hooks
   const { init: initUser, loading, user } = useUserStore();
   const { init: initNotes } = useNotesStore();
+  const router = useRouter();
 
   // effects
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
-      initUser(user);
+      if (user) {
+        initUser(user);
+      } else {
+        router.replace(ROUTES.logIn.getHref());
+      }
     });
   }, []);
 
@@ -55,6 +60,12 @@ const App = () => {
           presentation: "transparentModal",
           headerShown: false,
           animation: "fade",
+        }}
+      />
+      <Stack.Screen
+        name={ROUTES.logIn.getName()}
+        options={{
+          headerShown: false,
         }}
       />
     </Stack>

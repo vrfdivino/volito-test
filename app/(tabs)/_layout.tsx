@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Tabs, useRouter } from "expo-router";
 
 import { ROUTES } from "@/constants/routes";
+import LogOutButton from "@/components/LogOutButton";
 
 const TabLayout = () => {
   // hooks
@@ -23,11 +24,15 @@ const TabLayout = () => {
 
   // render
   return (
-    <Tabs initialRouteName={ROUTES.notesList.getName()}>
+    <Tabs
+      initialRouteName={ROUTES.notesList.getName()}
+      screenOptions={{
+        headerRight: () => <LogOutButton />,
+      }}
+    >
       <Tabs.Screen
         name="index"
         options={{
-          title: "Notes (list)",
           href: null,
         }}
       />
