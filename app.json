@@ -26,7 +26,12 @@
         "android.permission.ACCESS_FINE_LOCATION",
         "android.permission.RECORD_AUDIO"
       ],
-      "package": "com.vrfdivino.volitotest"
+      "package": "com.vrfdivino.volitotest",
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyC0iOL8u3ftuI1sPzHz_q4gVy_G7f9I5U0"
+        }
+      }
     },
     "web": {
       "bundler": "metro",

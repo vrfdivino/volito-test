@@ -8,6 +8,7 @@ import { Fragment, useRef, useState } from "react";
 import { deleteDoc, doc, setDoc } from "firebase/firestore";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { Modal, Platform, StyleSheet, View } from "react-native";
+import { deleteObject, ref, uploadBytes } from "firebase/storage";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { DateTimePickerAndroid } from "@react-native-community/datetimepicker";
 
@@ -19,7 +20,6 @@ import Typography from "@/components/Typography";
 import { useUserStore } from "@/stores/UserStore";
 import { db, storage } from "@/services/firebase";
 import { useNotesStore } from "@/stores/NotesStore";
-import { deleteObject, ref, uploadBytes } from "firebase/storage";
 
 const NoteDetailsScreen = () => {
   // hooks
@@ -69,7 +69,10 @@ const NoteDetailsScreen = () => {
       try {
         let imageUrl = "";
         if (imageBlob) {
-          const imageRef = ref(storage, payload.id);
+          const imageRef = ref(
+            storage,
+            `${payload.userId}-${Crypto.randomUUID()}`
+          );
           const imageUpload = await uploadBytes(imageRef, imageBlob);
           imageUrl = `https://firebasestorage.googleapis.com/v0/b/${imageUpload.ref.bucket}/o/${imageUpload.ref.fullPath}?alt=media`;
         }

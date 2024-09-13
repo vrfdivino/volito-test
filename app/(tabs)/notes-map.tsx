@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { useRouter } from "expo-router";
-import { FlatList, Modal, SafeAreaView, StyleSheet, View } from "react-native";
 import { observer } from "mobx-react-lite";
-import MapView, { Marker } from "react-native-maps";
+import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
+import { FlatList, Modal, SafeAreaView, StyleSheet, View } from "react-native";
 
 import Button from "@/components/Button";
 import { COLORS } from "@/constants/theme";
@@ -85,6 +85,7 @@ const NotesMapScreen = () => {
           latitude: location.latitude,
           longitude: location.longitude,
         }}
+        provider={PROVIDER_GOOGLE}
       >
         {Object.entries(notesByLocation).map(([location, notes], _) => (
           <Marker

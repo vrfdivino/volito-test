@@ -9,7 +9,15 @@
       "distribution": "internal"
     },
     "preview": {
-      "distribution": "internal"
+      "distribution": "internal",
+      "env": {
+        "EXPO_PUBLIC_FIREBASE_API_KEY": "AIzaSyDcit06jXzX8ne2SkckXxnbTKW0rzX4kbA",
+        "EXPO_PUBLIC_FIREBASE_AUTH_DOMAIN": "volito-test.firebaseapp.com",
+        "EXPO_PUBLIC_FIREBASE_PROJECT_ID": "volito-test",
+        "EXPO_PUBLIC_FIREBASE_STORAGE_BUCKET": "volito-test.appspot.com",
+        "EXPO_PUBLIC_FIREBASE_MESSAGING_SENDER_ID": "959636977041",
+        "EXPO_PUBLIC_FIREBASE_APP_ID": "1:959636977041:web:115378007231d2535c9630"
+      }
     },
     "production": {
       "autoIncrement": true
