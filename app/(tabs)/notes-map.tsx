@@ -10,27 +10,40 @@ import Typography from "@/components/Typography";
 import NoteListItem from "@/components/NoteListItem";
 import AddNoteButton from "@/components/AddNoteButton";
 import { INote, useNotesStore } from "@/stores/NotesStore";
+import Button from "@/components/Button";
 
 const NotesMapScreen = () => {
   // hooks
   const { notesByLocation } = useNotesStore();
   const [selectedNotes, setSelectedNotes] = useState<INote[]>([]);
+  const [showModal, setShowModal] = useState<boolean>(false);
   const router = useRouter();
 
   // handlers
   const onPressMarker = (notes: INote[]) => {
+    setShowModal(true);
     setSelectedNotes(notes);
   };
 
   const onPressNote = (note: INote) => {
-    setSelectedNotes([]);
+    setShowModal(false);
     router.push(ROUTES.noteDetails.getHref({ noteId: note.id }));
+    setTimeout(() => {
+      setSelectedNotes([]);
+    }, 1000);
+  };
+
+  const onCloseModal = () => {
+    setShowModal(false);
+    setTimeout(() => {
+      setSelectedNotes([]);
+    }, 1000);
   };
 
   // render
   return (
     <View style={styles.root}>
-      <Modal visible={selectedNotes.length > 0} animationType="fade">
+      <Modal visible={showModal} animationType="slide">
         <SafeAreaView>
           <FlatList
             data={selectedNotes}
@@ -47,6 +60,13 @@ const NotesMapScreen = () => {
               );
             }}
             stickyHeaderIndices={[0]}
+            ListFooterComponent={() => (
+              <Button
+                label={"Close"}
+                variant={"contained"}
+                onPress={onCloseModal}
+              />
+            )}
             renderItem={({ item }) => (
               <NoteListItem key={item.id} note={item} onPress={onPressNote} />
             )}

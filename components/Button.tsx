@@ -1,8 +1,10 @@
 import {
   ActivityIndicator,
+  StyleProp,
   StyleSheet,
   Text,
   TouchableOpacity,
+  ViewStyle,
 } from "react-native";
 
 import { COLORS } from "@/constants/theme";
@@ -13,6 +15,7 @@ type ButtonProps = {
   onPress: () => void;
   disabled?: boolean;
   loading?: boolean;
+  customStyle?: StyleProp<ViewStyle>;
 };
 
 const Button = ({
@@ -21,6 +24,7 @@ const Button = ({
   disabled,
   loading,
   onPress,
+  customStyle,
 }: ButtonProps) => {
   const handlePress = () => {
     if (disabled) return;
@@ -31,7 +35,7 @@ const Button = ({
     <TouchableOpacity
       activeOpacity={0.8}
       onPress={handlePress}
-      style={[styles[variant], styles.pressable]}
+      style={[styles[variant], styles.pressable, customStyle]}
     >
       {loading ? (
         <ActivityIndicator />
