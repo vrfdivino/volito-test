@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { Fragment, useState } from "react";
 import { observer } from "mobx-react-lite";
 import { Ionicons } from "@expo/vector-icons";
 import { FlatList, StyleSheet, TouchableOpacity, View } from "react-native";
@@ -29,23 +29,38 @@ const NotesListScreen = () => {
 
   return (
     <View style={styles.root}>
-      <TouchableOpacity onPress={onToggleSort} style={styles.sortPressable}>
-        <Ionicons
-          name={sort == "mostRecent" ? "arrow-down" : "arrow-up"}
-          style={styles.sortIcon}
-        />
-        <Typography
-          variant="bodySmall"
-          text={sort === "mostRecent" ? "Most recent" : "Most oldest"}
-          customStyle={styles.sortText}
-        />
-      </TouchableOpacity>
-      <FlatList
-        data={[...notes]}
-        renderItem={({ item, index }) => (
-          <NoteListItem key={index} note={item} />
-        )}
-      />
+      {notes.length > 0 ? (
+        <Fragment>
+          <TouchableOpacity onPress={onToggleSort} style={styles.sortPressable}>
+            <Ionicons
+              name={sort == "mostRecent" ? "arrow-down" : "arrow-up"}
+              style={styles.sortIcon}
+            />
+            <Typography
+              variant="bodySmall"
+              text={sort === "mostRecent" ? "Most recent" : "Most oldest"}
+              customStyle={styles.sortText}
+            />
+          </TouchableOpacity>
+          <FlatList
+            data={[...notes]}
+            renderItem={({ item, index }) => (
+              <NoteListItem key={index} note={item} />
+            )}
+          />
+        </Fragment>
+      ) : (
+        <View style={styles.emptyContainer}>
+          <Typography
+            variant={"body"}
+            text={
+              "Uh oh! Try adding a new note by clicking the 'Add note' button."
+            }
+            customStyle={styles.emptyText}
+          />
+        </View>
+      )}
+
       <AddNoteButton />
     </View>
   );
@@ -73,5 +88,13 @@ const styles = StyleSheet.create({
   sortText: {
     fontWeight: "bold",
     color: COLORS.black,
+  },
+  emptyContainer: {
+    height: "100%",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  emptyText: {
+    textAlign: "center",
   },
 });
