@@ -5,6 +5,7 @@ import Button from "@/components/Button";
 import { COLORS } from "@/constants/theme";
 import Typography from "@/components/Typography";
 import { useUserStore } from "@/stores/UserStore";
+import { observer } from "mobx-react-lite";
 
 const WelcomeScreen = () => {
   // hooks
@@ -37,7 +38,7 @@ const WelcomeScreen = () => {
   );
 };
 
-export default WelcomeScreen;
+export default observer(WelcomeScreen);
 
 const styles = StyleSheet.create({
   root: {

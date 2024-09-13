@@ -7,6 +7,7 @@ import { ROUTES } from "@/constants/routes";
 import Typography from "@/components/Typography";
 import { useUserStore } from "@/stores/UserStore";
 import LogOutButton from "@/components/LogOutButton";
+import { observer } from "mobx-react-lite";
 
 const TabLayout = () => {
   // hooks
@@ -95,4 +96,4 @@ const TabLayout = () => {
   );
 };
 
-export default TabLayout;
+export default observer(TabLayout);

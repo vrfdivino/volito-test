@@ -2,14 +2,14 @@ import { useEffect } from "react";
 import { observer } from "mobx-react-lite";
 import { Ionicons } from "@expo/vector-icons";
 import { Stack, useRouter } from "expo-router";
+import { onAuthStateChanged } from "firebase/auth";
+import { collection, onSnapshot, query, where } from "firebase/firestore";
 import {
   ActivityIndicator,
   StyleSheet,
   TouchableOpacity,
   View,
 } from "react-native";
-import { onAuthStateChanged } from "firebase/auth";
-import { collection, onSnapshot, query, where } from "firebase/firestore";
 
 import { COLORS } from "@/constants/theme";
 import { ROUTES } from "@/constants/routes";
