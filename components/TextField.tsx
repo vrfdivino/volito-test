@@ -5,16 +5,27 @@ import { COLORS } from "@/constants/theme";
 type TextFieldProps = {
   label: string;
   value: string;
-  onChange: (value: string) => void;
+  onChange?: (value: string) => void;
+  onPress?: () => void;
   customStyle?: StyleProp<TextStyle>;
+  readOnly?: boolean;
 };
 
-const TextField = ({ label, value, onChange, customStyle }: TextFieldProps) => {
+const TextField = ({
+  label,
+  value,
+  onChange,
+  onPress,
+  customStyle,
+  readOnly,
+}: TextFieldProps) => {
   return (
     <TextInput
+      readOnly={readOnly}
       placeholder={label}
       value={value}
       onChangeText={onChange}
+      onPress={onPress}
       autoCapitalize="none"
       autoCorrect={false}
       style={[customStyle, styles.root]}

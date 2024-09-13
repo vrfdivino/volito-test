@@ -46,6 +46,7 @@ const TabLayout = () => {
         options={{
           title: "List",
           headerTitle: "",
+          headerShadowVisible: false,
           tabBarLabel: ({ children, color }) => (
             <Typography
               variant={"bodySmall"}

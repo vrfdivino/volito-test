@@ -37,6 +37,7 @@ const NotesListScreen = () => {
         <Typography
           variant="bodySmall"
           text={sort === "mostRecent" ? "Most recent" : "Most oldest"}
+          customStyle={styles.sortText}
         />
       </TouchableOpacity>
       <FlatList
@@ -68,5 +69,9 @@ const styles = StyleSheet.create({
   sortIcon: {
     color: COLORS.black,
     fontSize: 14,
+  },
+  sortText: {
+    fontWeight: "bold",
+    color: COLORS.black,
   },
 });
