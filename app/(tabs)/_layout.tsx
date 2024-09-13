@@ -1,3 +1,4 @@
+import { observer } from "mobx-react-lite";
 import { useEffect, useState } from "react";
 import { Tabs, useRouter } from "expo-router";
 import Ionicons from "@expo/vector-icons/Ionicons";
@@ -7,7 +8,6 @@ import { ROUTES } from "@/constants/routes";
 import Typography from "@/components/Typography";
 import { useUserStore } from "@/stores/UserStore";
 import LogOutButton from "@/components/LogOutButton";
-import { observer } from "mobx-react-lite";
 
 const TabLayout = () => {
   // hooks
