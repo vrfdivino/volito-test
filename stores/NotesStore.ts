@@ -30,6 +30,19 @@ const NotesStore = types
     getNoteById(id: string) {
       return self.notes.find((note) => note.id === id);
     },
+    getSortNotes(sort: ISortNote) {
+      return self.notes.slice().sort((a, b) => {
+        if (sort === "mostOldest") {
+          return (
+            new Date(a.dateCreated).getTime() -
+            new Date(b.dateCreated).getTime()
+          );
+        }
+        return (
+          new Date(b.dateCreated).getTime() - new Date(a.dateCreated).getTime()
+        );
+      });
+    },
   }));
 
 const notesStore = NotesStore.create({
@@ -39,3 +52,4 @@ const notesStore = NotesStore.create({
 
 export const useNotesStore = () => notesStore;
 export type INote = SnapshotOut<typeof Note>;
+export type ISortNote = "mostRecent" | "mostOldest";
