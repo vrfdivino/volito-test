@@ -1,17 +1,20 @@
+import { useRouter } from "expo-router";
 import { Fragment, useState } from "react";
 import { observer } from "mobx-react-lite";
 import { Ionicons } from "@expo/vector-icons";
 import { FlatList, StyleSheet, TouchableOpacity, View } from "react-native";
 
 import { COLORS } from "@/constants/theme";
+import { ROUTES } from "@/constants/routes";
 import Typography from "@/components/Typography";
 import NoteListItem from "@/components/NoteListItem";
 import AddNoteButton from "@/components/AddNoteButton";
-import { ISortNote, useNotesStore } from "@/stores/NotesStore";
+import { INote, ISortNote, useNotesStore } from "@/stores/NotesStore";
 
 const NotesListScreen = () => {
   // hooks
   const { getSortNotes } = useNotesStore();
+  const router = useRouter();
 
   // states
   const [sort, setSort] = useState<ISortNote>("mostRecent");
@@ -22,6 +25,10 @@ const NotesListScreen = () => {
       if (prev === "mostOldest") return "mostRecent";
       return "mostOldest";
     });
+  };
+
+  const onPressNote = (note: INote) => {
+    router.push(ROUTES.noteDetails.getHref({ noteId: note.id }));
   };
 
   // render
@@ -45,7 +52,7 @@ const NotesListScreen = () => {
           <FlatList
             data={[...notes]}
             renderItem={({ item, index }) => (
-              <NoteListItem key={index} note={item} />
+              <NoteListItem key={index} note={item} onPress={onPressNote} />
             )}
           />
         </Fragment>

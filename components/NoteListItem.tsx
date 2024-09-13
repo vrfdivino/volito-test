@@ -6,25 +6,17 @@ import { Pressable, StyleSheet, View } from "react-native";
 
 import { COLORS } from "@/constants/theme";
 import { INote } from "@/stores/NotesStore";
-import { ROUTES } from "@/constants/routes";
 import Typography from "@/components/Typography";
 
 type NoteListItemProps = {
   note: INote;
+  onPress: (note: INote) => void;
 };
 
-const NoteListItem = ({ note }: NoteListItemProps) => {
-  // hooks
-  const router = useRouter();
-
-  // handlers
-  const onPress = () => {
-    router.push(ROUTES.noteDetails.getHref({ noteId: note.id }));
-  };
-
+const NoteListItem = ({ note, onPress }: NoteListItemProps) => {
   // render
   return (
-    <Pressable onPress={onPress} style={styles.pressable}>
+    <Pressable onPress={() => onPress(note)} style={styles.pressable}>
       {note.image && (
         <Image source={{ uri: note.image }} style={styles.image} />
       )}

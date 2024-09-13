@@ -44,6 +44,18 @@ const NotesStore = types
         );
       });
     },
+    get notesByLocation() {
+      const notes: Record<string, INote[]> = {};
+      self.notes.forEach((note) => {
+        const noteLocationKey = `${note.location.latitude}-${note.location.longitude}`;
+        if (noteLocationKey in notes) {
+          notes[noteLocationKey].push(note);
+        } else {
+          notes[noteLocationKey] = [note];
+        }
+      });
+      return notes;
+    },
   }));
 
 const notesStore = NotesStore.create({
