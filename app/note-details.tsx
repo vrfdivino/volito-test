@@ -5,10 +5,11 @@ import * as Crypto from "expo-crypto";
 import { observer } from "mobx-react-lite";
 import * as ImagePicker from "expo-image-picker";
 import { Fragment, useRef, useState } from "react";
-import { Modal, StyleSheet, View } from "react-native";
+import { Modal, Platform, StyleSheet, View } from "react-native";
 import { deleteDoc, doc, setDoc } from "firebase/firestore";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import DateTimePicker from "@react-native-community/datetimepicker";
+import { DateTimePickerAndroid } from "@react-native-community/datetimepicker";
 
 import Button from "@/components/Button";
 import { COLORS } from "@/constants/theme";
@@ -53,7 +54,6 @@ const NoteDetailsScreen = () => {
           },
     },
     onSubmit: async (values, { setFieldError }) => {
-      setLoading(true);
       const payload = {
         ...values,
         dateCreated: values.dateCreated.toISOString(),
@@ -64,15 +64,15 @@ const NoteDetailsScreen = () => {
         return;
       }
 
-      if (!imageBlob) {
-        setFieldError("image", "Error uploading the image.");
-        return;
-      }
+      setLoading(true);
 
       try {
-        const imageRef = ref(storage, payload.id);
-        const imageUpload = await uploadBytes(imageRef, imageBlob);
-        const imageUrl = `https://firebasestorage.googleapis.com/v0/b/${imageUpload.ref.bucket}/o/${imageUpload.ref.fullPath}?alt=media`;
+        let imageUrl = "";
+        if (imageBlob) {
+          const imageRef = ref(storage, payload.id);
+          const imageUpload = await uploadBytes(imageRef, imageBlob);
+          imageUrl = `https://firebasestorage.googleapis.com/v0/b/${imageUpload.ref.bucket}/o/${imageUpload.ref.fullPath}?alt=media`;
+        }
 
         await setDoc(doc(db, TABLES.notes, payload.id), {
           ...payload,
@@ -80,8 +80,8 @@ const NoteDetailsScreen = () => {
         });
       } catch (err) {
         setFieldError("image", "Error uploading the image.");
-        return;
       }
+
       setLoading(false);
       router.back();
     },
@@ -98,7 +98,21 @@ const NoteDetailsScreen = () => {
 
   const onToggleDatePicker = () => {
     if (!editing) return;
-    setShowDatePicker((prev) => !prev);
+
+    setShowDatePicker((prev) => {
+      if (Platform.OS === "android") {
+        if (prev) {
+          DateTimePickerAndroid.open({
+            value: values.dateCreated,
+            onChange: (_, date) => onChangeDateCreated(date),
+          });
+        } else {
+          DateTimePickerAndroid.dismiss("date");
+        }
+      }
+
+      return !prev;
+    });
   };
 
   const onChangeDateCreated = (value: Date | undefined) => {
@@ -140,7 +154,7 @@ const NoteDetailsScreen = () => {
       quality: 1,
     });
 
-    if (result.assets && result.assets[0]) {
+    if (!result.canceled && result.assets && result.assets[0]) {
       const response = await fetch(result.assets[0].uri);
       const blob = await response.blob();
       setFieldValue("image", result.assets[0].uri);
@@ -225,7 +239,7 @@ const NoteDetailsScreen = () => {
         />
         {errors.image && <Typography variant="error" text={errors.image} />}
       </View>
-      {showDatePicker && (
+      {Platform.OS === "ios" && (
         <Modal visible={showDatePicker} animationType="fade">
           <View style={styles.modal}>
             <DateTimePicker
@@ -243,7 +257,6 @@ const NoteDetailsScreen = () => {
           </View>
         </Modal>
       )}
-
       {!editing && (
         <Fragment>
           <Button

@@ -4,16 +4,18 @@ import { FlatList, Modal, SafeAreaView, StyleSheet, View } from "react-native";
 import { observer } from "mobx-react-lite";
 import MapView, { Marker } from "react-native-maps";
 
+import Button from "@/components/Button";
 import { COLORS } from "@/constants/theme";
 import { ROUTES } from "@/constants/routes";
 import Typography from "@/components/Typography";
+import { useUserStore } from "@/stores/UserStore";
 import NoteListItem from "@/components/NoteListItem";
 import AddNoteButton from "@/components/AddNoteButton";
 import { INote, useNotesStore } from "@/stores/NotesStore";
-import Button from "@/components/Button";
 
 const NotesMapScreen = () => {
   // hooks
+  const { location } = useUserStore();
   const { notesByLocation } = useNotesStore();
   const [selectedNotes, setSelectedNotes] = useState<INote[]>([]);
   const [showModal, setShowModal] = useState<boolean>(false);
@@ -41,6 +43,7 @@ const NotesMapScreen = () => {
   };
 
   // render
+  if (!location) return null;
   return (
     <View style={styles.root}>
       <Modal visible={showModal} animationType="slide">
@@ -73,7 +76,15 @@ const NotesMapScreen = () => {
           />
         </SafeAreaView>
       </Modal>
-      <MapView style={styles.map}>
+      <MapView
+        style={styles.map}
+        region={{
+          latitudeDelta: 0.0922,
+          longitudeDelta: 0.0421,
+          latitude: location.latitude,
+          longitude: location.longitude,
+        }}
+      >
         {Object.entries(notesByLocation).map(([location, notes], _) => (
           <Marker
             key={location}

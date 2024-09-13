@@ -29,7 +29,7 @@ const UserStore = types
 
       self.loading = true;
 
-      yield Location.getForegroundPermissionsAsync();
+      yield Location.requestForegroundPermissionsAsync();
       const { coords } = yield Location.getCurrentPositionAsync({});
       self.location = { ...coords };
 
