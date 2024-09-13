@@ -10,14 +10,15 @@ import { deleteDoc, doc, setDoc } from "firebase/firestore";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import DateTimePicker from "@react-native-community/datetimepicker";
 
-import { db } from "@/services/firebase";
 import Button from "@/components/Button";
 import { COLORS } from "@/constants/theme";
 import { TABLES } from "@/constants/tables";
 import TextField from "@/components/TextField";
 import Typography from "@/components/Typography";
 import { useUserStore } from "@/stores/UserStore";
+import { db, storage } from "@/services/firebase";
 import { useNotesStore } from "@/stores/NotesStore";
+import { deleteObject, ref, uploadBytes } from "firebase/storage";
 
 const NoteDetailsScreen = () => {
   // hooks
@@ -32,6 +33,7 @@ const NoteDetailsScreen = () => {
   const [showDatePicker, setShowDatePicker] = useState<boolean>(false);
   const [editing, setEditing] = useState<boolean>(!note ? true : false);
   const [loading, setLoading] = useState<boolean>(false);
+  const [imageBlob, setImageBlob] = useState<Blob | undefined>();
 
   // form
   const { values, errors, setFieldValue, submitForm, setValues } = useFormik({
@@ -42,6 +44,7 @@ const NoteDetailsScreen = () => {
       dateCreated: new Date(note?.dateCreated || Date.now()),
       userId: note?.userId || user?.id,
       image: note?.image || "",
+      imageName: note?.imageName || "",
       location: note?.location
         ? { ...note.location }
         : {
@@ -55,11 +58,30 @@ const NoteDetailsScreen = () => {
         ...values,
         dateCreated: values.dateCreated.toISOString(),
       };
+
       if (!payload.title) {
         setFieldError("title", "Note title is required.");
         return;
       }
-      await setDoc(doc(db, TABLES.notes, payload.id), payload);
+
+      if (!imageBlob) {
+        setFieldError("image", "Error uploading the image.");
+        return;
+      }
+
+      try {
+        const imageRef = ref(storage, payload.id);
+        const imageUpload = await uploadBytes(imageRef, imageBlob);
+        const imageUrl = `https://firebasestorage.googleapis.com/v0/b/${imageUpload.ref.bucket}/o/${imageUpload.ref.fullPath}?alt=media`;
+
+        await setDoc(doc(db, TABLES.notes, payload.id), {
+          ...payload,
+          image: imageUrl,
+        });
+      } catch (err) {
+        setFieldError("image", "Error uploading the image.");
+        return;
+      }
       setLoading(false);
       router.back();
     },
@@ -94,7 +116,6 @@ const NoteDetailsScreen = () => {
   };
 
   const onCancelEdit = () => {
-    console.log(prevValues.current);
     setValues(prevValues.current);
     setEditing(false);
     setShowDatePicker(false);
@@ -102,6 +123,8 @@ const NoteDetailsScreen = () => {
 
   const onDelete = async () => {
     setLoading(true);
+    const imageRef = ref(storage, values.id);
+    await deleteObject(imageRef);
     await deleteDoc(doc(db, TABLES.notes, values.id));
     setLoading(false);
     router.back();
@@ -118,7 +141,11 @@ const NoteDetailsScreen = () => {
     });
 
     if (result.assets && result.assets[0]) {
+      const response = await fetch(result.assets[0].uri);
+      const blob = await response.blob();
       setFieldValue("image", result.assets[0].uri);
+      setFieldValue("imageName", result.assets[0].fileName || "");
+      setImageBlob(blob);
     }
 
     setLoading(false);
@@ -126,6 +153,7 @@ const NoteDetailsScreen = () => {
 
   const onClearImage = () => {
     setFieldValue("image", "");
+    setFieldValue("imageName", "");
   };
 
   // render
@@ -143,6 +171,7 @@ const NoteDetailsScreen = () => {
           value={values.title}
           onChange={onChangeTitle}
         />
+        {errors.title && <Typography variant="error" text={errors.title} />}
       </View>
       <View>
         <Typography
@@ -189,11 +218,12 @@ const NoteDetailsScreen = () => {
         <TextField
           label="Image"
           readOnly={!editing}
-          value={values.image}
+          value={values.imageName}
           onPress={onPickImage}
           showClear={!!values.image && editing}
           onClear={onClearImage}
         />
+        {errors.image && <Typography variant="error" text={errors.image} />}
       </View>
       {showDatePicker && (
         <Modal visible={showDatePicker} animationType="fade">
@@ -213,7 +243,7 @@ const NoteDetailsScreen = () => {
           </View>
         </Modal>
       )}
-      {errors.title && <Typography variant="error" text={errors.title} />}
+
       {!editing && (
         <Fragment>
           <Button
