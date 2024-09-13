@@ -1,4 +1,12 @@
-import { StyleProp, StyleSheet, TextInput, TextStyle } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
+import {
+  StyleProp,
+  StyleSheet,
+  TextInput,
+  TextStyle,
+  TouchableOpacity,
+  View,
+} from "react-native";
 
 import { COLORS } from "@/constants/theme";
 
@@ -9,6 +17,8 @@ type TextFieldProps = {
   onPress?: () => void;
   customStyle?: StyleProp<TextStyle>;
   readOnly?: boolean;
+  showClear?: boolean;
+  onClear?: () => void;
 };
 
 const TextField = ({
@@ -18,19 +28,28 @@ const TextField = ({
   onPress,
   customStyle,
   readOnly,
+  showClear,
+  onClear,
 }: TextFieldProps) => {
   return (
-    <TextInput
-      readOnly={readOnly}
-      placeholder={label}
-      value={value}
-      onChangeText={onChange}
-      onPress={onPress}
-      autoCapitalize="none"
-      autoCorrect={false}
-      style={[customStyle, styles.root]}
-      selectionColor={COLORS.primary}
-    />
+    <View>
+      <TextInput
+        readOnly={readOnly}
+        placeholder={label}
+        value={value}
+        onChangeText={onChange}
+        onPress={onPress}
+        autoCapitalize="none"
+        autoCorrect={false}
+        style={[customStyle, styles.root]}
+        selectionColor={COLORS.primary}
+      />
+      {showClear && (
+        <TouchableOpacity style={styles.clearButton} onPress={onClear}>
+          <Ionicons name="close" style={styles.clearIcon} />
+        </TouchableOpacity>
+      )}
+    </View>
   );
 };
 
@@ -43,5 +62,22 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     borderWidth: 2,
     borderColor: COLORS.border,
+    position: "relative",
+  },
+  clearButton: {
+    width: 20,
+    height: 20,
+    borderRadius: 100,
+    backgroundColor: COLORS.primary,
+    position: "absolute",
+    zIndex: 999,
+    justifyContent: "center",
+    alignItems: "center",
+    top: "22%",
+    right: 5,
+  },
+  clearIcon: {
+    color: COLORS.white,
+    fontSize: 13,
   },
 });

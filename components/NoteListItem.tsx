@@ -1,4 +1,5 @@
 import { DateTime } from "luxon";
+import { Image } from "expo-image";
 import { useRouter } from "expo-router";
 import { observer } from "mobx-react-lite";
 import { Pressable, StyleSheet, View } from "react-native";
@@ -24,19 +25,24 @@ const NoteListItem = ({ note }: NoteListItemProps) => {
   // render
   return (
     <Pressable onPress={onPress} style={styles.pressable}>
-      <View style={styles.titleContainer}>
-        <Typography
-          variant={"body"}
-          text={note.title}
-          customStyle={styles.title}
-        />
-        <Typography
-          variant={"bodySmall"}
-          text={DateTime.fromISO(note.dateCreated).toFormat("DD")}
-          customStyle={styles.date}
-        />
+      {note.image && (
+        <Image source={{ uri: note.image }} style={styles.image} />
+      )}
+      <View style={styles.content}>
+        <View style={styles.titleContainer}>
+          <Typography
+            variant={"body"}
+            text={note.title}
+            customStyle={styles.title}
+          />
+          <Typography
+            variant={"bodySmall"}
+            text={DateTime.fromISO(note.dateCreated).toFormat("DD")}
+            customStyle={styles.date}
+          />
+        </View>
+        <Typography variant={"bodySmall"} text={note.body} />
       </View>
-      <Typography variant={"bodySmall"} text={note.body} />
     </Pressable>
   );
 };
@@ -50,6 +56,9 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     padding: 10,
     marginBottom: 10,
+    maxHeight: 80,
+    flexDirection: "row",
+    alignItems: "center",
   },
   title: {
     color: COLORS.primary,
@@ -64,5 +73,14 @@ const styles = StyleSheet.create({
     gap: 5,
     alignItems: "flex-end",
     justifyContent: "space-between",
+  },
+  content: {
+    flex: 1,
+  },
+  image: {
+    height: 50,
+    width: 50,
+    borderRadius: 10,
+    marginRight: 10,
   },
 });

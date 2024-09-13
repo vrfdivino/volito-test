@@ -12,6 +12,7 @@ const Note = types.model({
   userId: types.string,
   location: NoteLocation,
   dateCreated: types.string,
+  image: types.maybe(types.string),
 });
 
 const NotesStore = types

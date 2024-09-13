@@ -1,7 +1,9 @@
 import { DateTime } from "luxon";
 import { useFormik } from "formik";
+import { Image } from "expo-image";
 import * as Crypto from "expo-crypto";
 import { observer } from "mobx-react-lite";
+import * as ImagePicker from "expo-image-picker";
 import { Fragment, useRef, useState } from "react";
 import { Modal, StyleSheet, View } from "react-native";
 import { deleteDoc, doc, setDoc } from "firebase/firestore";
@@ -39,6 +41,7 @@ const NoteDetailsScreen = () => {
       body: note?.body || "",
       dateCreated: new Date(note?.dateCreated || Date.now()),
       userId: note?.userId || user?.id,
+      image: note?.image || "",
       location: note?.location
         ? { ...note.location }
         : {
@@ -91,6 +94,7 @@ const NoteDetailsScreen = () => {
   };
 
   const onCancelEdit = () => {
+    console.log(prevValues.current);
     setValues(prevValues.current);
     setEditing(false);
     setShowDatePicker(false);
@@ -101,6 +105,27 @@ const NoteDetailsScreen = () => {
     await deleteDoc(doc(db, TABLES.notes, values.id));
     setLoading(false);
     router.back();
+  };
+
+  const onPickImage = async () => {
+    if (!editing) return;
+
+    setLoading(true);
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: false,
+      quality: 1,
+    });
+
+    if (result.assets && result.assets[0]) {
+      setFieldValue("image", result.assets[0].uri);
+    }
+
+    setLoading(false);
+  };
+
+  const onClearImage = () => {
+    setFieldValue("image", "");
   };
 
   // render
@@ -147,6 +172,29 @@ const NoteDetailsScreen = () => {
           onPress={onToggleDatePicker}
         />
       </View>
+      <View>
+        <Typography
+          variant={"bodySmall"}
+          text={"Image"}
+          customStyle={styles.label}
+        />
+        {values.image && (
+          <Image
+            source={{
+              uri: values.image,
+            }}
+            style={styles.image}
+          />
+        )}
+        <TextField
+          label="Image"
+          readOnly={!editing}
+          value={values.image}
+          onPress={onPickImage}
+          showClear={!!values.image && editing}
+          onClear={onClearImage}
+        />
+      </View>
       {showDatePicker && (
         <Modal visible={showDatePicker} animationType="fade">
           <View style={styles.modal}>
@@ -190,12 +238,14 @@ const NoteDetailsScreen = () => {
             onPress={onSave}
             loading={loading}
           />
-          <Button
-            variant="outline"
-            label="Cancel"
-            onPress={onCancelEdit}
-            disabled={loading}
-          />
+          {note && (
+            <Button
+              variant="outline"
+              label="Cancel"
+              onPress={onCancelEdit}
+              disabled={loading}
+            />
+          )}
         </Fragment>
       )}
     </View>
@@ -222,5 +272,12 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.white,
     padding: 20,
     gap: 10,
+  },
+  image: {
+    width: 100,
+    height: 100,
+    borderRadius: 10,
+    alignSelf: "center",
+    marginBottom: 10,
   },
 });
