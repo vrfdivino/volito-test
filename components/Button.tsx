@@ -38,7 +38,9 @@ const Button = ({
       style={[styles[variant], styles.pressable, customStyle]}
     >
       {loading ? (
-        <ActivityIndicator />
+        <ActivityIndicator
+          color={variant === "contained" ? COLORS.white : COLORS.primary}
+        />
       ) : (
         <Text style={[styles[`text${variant}`], styles.text]}>{label}</Text>
       )}

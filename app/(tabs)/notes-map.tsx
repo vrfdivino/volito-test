@@ -49,6 +49,7 @@ const NotesMapScreen = () => {
       <Modal visible={showModal} animationType="slide">
         <SafeAreaView>
           <FlatList
+            showsVerticalScrollIndicator={false}
             data={selectedNotes}
             contentContainerStyle={styles.flatList}
             ListHeaderComponent={() => {

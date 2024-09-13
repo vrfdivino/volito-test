@@ -5,9 +5,9 @@ import * as Crypto from "expo-crypto";
 import { observer } from "mobx-react-lite";
 import * as ImagePicker from "expo-image-picker";
 import { Fragment, useRef, useState } from "react";
-import { Modal, Platform, StyleSheet, View } from "react-native";
 import { deleteDoc, doc, setDoc } from "firebase/firestore";
 import { useLocalSearchParams, useRouter } from "expo-router";
+import { Modal, Platform, StyleSheet, View } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { DateTimePickerAndroid } from "@react-native-community/datetimepicker";
 
@@ -137,8 +137,11 @@ const NoteDetailsScreen = () => {
 
   const onDelete = async () => {
     setLoading(true);
-    const imageRef = ref(storage, values.id);
-    await deleteObject(imageRef);
+    if (values.image) {
+      const imageRef = ref(storage, values.id);
+      await deleteObject(imageRef);
+    }
+
     await deleteDoc(doc(db, TABLES.notes, values.id));
     setLoading(false);
     router.back();

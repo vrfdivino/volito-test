@@ -51,6 +51,7 @@ const NotesListScreen = () => {
           </TouchableOpacity>
           <FlatList
             data={[...notes]}
+            showsVerticalScrollIndicator={false}
             renderItem={({ item, index }) => (
               <NoteListItem key={index} note={item} onPress={onPressNote} />
             )}

@@ -59,7 +59,7 @@ const App = () => {
 
   // render
   if (loading) {
-    return <ActivityIndicator />;
+    return <ActivityIndicator color={COLORS.primary} />;
   }
   return (
     <Stack initialRouteName="(tabs)">
