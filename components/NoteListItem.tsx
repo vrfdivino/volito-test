@@ -33,7 +33,7 @@ const NoteListItem = ({ note, onPress }: NoteListItemProps) => {
             customStyle={styles.date}
           />
         </View>
-        <Typography variant={"bodySmall"} text={note.body} />
+        <Typography variant={"bodySmall"} text={note.body ? note.body : "--"} />
       </View>
     </Pressable>
   );
@@ -62,12 +62,12 @@ const styles = StyleSheet.create({
   },
   titleContainer: {
     flexDirection: "row",
-    gap: 5,
-    alignItems: "flex-end",
+    alignItems: "center",
     justifyContent: "space-between",
   },
   content: {
     flex: 1,
+    justifyContent: "flex-start",
   },
   image: {
     height: 50,

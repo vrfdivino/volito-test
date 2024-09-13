@@ -5,11 +5,13 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import { COLORS } from "@/constants/theme";
 import { ROUTES } from "@/constants/routes";
 import Typography from "@/components/Typography";
+import { useUserStore } from "@/stores/UserStore";
 import LogOutButton from "@/components/LogOutButton";
 
 const TabLayout = () => {
   // hooks
   const router = useRouter();
+  const { user } = useUserStore();
 
   // states
   const [initialRender, setInitialRender] = useState<boolean>(true);
@@ -47,6 +49,15 @@ const TabLayout = () => {
           title: "List",
           headerTitle: "",
           headerShadowVisible: false,
+          headerLeft: () => (
+            <Typography
+              variant={"screenTitle"}
+              text={`Hi, ${user?.displayName}!`}
+              customStyle={{
+                marginLeft: 20,
+              }}
+            />
+          ),
           tabBarLabel: ({ children, color }) => (
             <Typography
               variant={"bodySmall"}

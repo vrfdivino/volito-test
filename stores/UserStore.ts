@@ -6,10 +6,16 @@ const UserLocation = types.model({
   longitude: types.number,
 });
 
-const User = types.model({
-  email: types.string,
-  id: types.identifier,
-});
+const User = types
+  .model({
+    email: types.string,
+    id: types.identifier,
+  })
+  .views((self) => ({
+    get displayName() {
+      return self.email.split("@")[0];
+    },
+  }));
 
 const UserStore = types
   .model({

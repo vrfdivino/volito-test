@@ -21,7 +21,10 @@ const WelcomeScreen = () => {
   return (
     <View style={styles.root}>
       <View style={styles.container}>
-        <Typography variant={"screenTitle"} text={`Hello, ${user.email}!`} />
+        <Typography
+          variant={"screenTitle"}
+          text={`Hello, ${user.displayName}!`}
+        />
         <Typography
           variant={"body"}
           text={
