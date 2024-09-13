@@ -1,9 +1,15 @@
 import { useRouter } from "expo-router";
-import { Pressable, Text, View } from "react-native";
+import { StyleSheet, View } from "react-native";
+
+import Button from "@/components/Button";
+import { COLORS } from "@/constants/theme";
+import Typography from "@/components/Typography";
+import { useUserStore } from "@/stores/UserStore";
 
 const WelcomeScreen = () => {
   // hooks
   const router = useRouter();
+  const { user } = useUserStore();
 
   // handlers
   const onClose = () => {
@@ -11,29 +17,39 @@ const WelcomeScreen = () => {
   };
 
   // render
+  if (!user) return;
   return (
-    <View
-      style={{
-        height: "100%",
-        width: "100%",
-        justifyContent: "center",
-        alignItems: "center",
-        backgroundColor: "rgba(0,0,0,0.5)",
-      }}
-    >
-      <View
-        style={{
-          height: "35%",
-          width: "75%",
-          backgroundColor: "white",
-        }}
-      >
-        <Pressable onPress={onClose}>
-          <Text>Close</Text>
-        </Pressable>
+    <View style={styles.root}>
+      <View style={styles.container}>
+        <Typography variant={"screenTitle"} text={`Hello, ${user.email}!`} />
+        <Typography
+          variant={"body"}
+          text={
+            "Welcome to this app! You will enjoy creating notes whether in list or map views."
+          }
+        />
+        <Button label={"Close"} variant={"contained"} onPress={onClose} />
       </View>
     </View>
   );
 };
 
 export default WelcomeScreen;
+
+const styles = StyleSheet.create({
+  root: {
+    height: "100%",
+    width: "100%",
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: COLORS.overlay,
+  },
+  container: {
+    maxWidth: "75%",
+    backgroundColor: COLORS.white,
+    borderRadius: 10,
+    padding: 20,
+    justifyContent: "center",
+    gap: 10,
+  },
+});

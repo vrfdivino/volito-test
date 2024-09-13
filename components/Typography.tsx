@@ -1,7 +1,9 @@
 import { Text, StyleSheet, StyleProp, TextStyle } from "react-native";
 
+import { COLORS } from "@/constants/theme";
+
 type TypographyProps = {
-  variant: "screenTitle" | "error";
+  variant: "screenTitle" | "error" | "body" | "bodySmall";
   text: string;
   customStyle?: StyleProp<TextStyle>;
 };
@@ -19,7 +21,15 @@ const styles = StyleSheet.create({
   },
   error: {
     fontSize: 14,
-    color: "red",
+    color: COLORS.error,
     fontWeight: "bold",
+  },
+  body: {
+    fontSize: 16,
+    lineHeight: 22,
+  },
+  bodySmall: {
+    fontSize: 14,
+    lineHeight: 22,
   },
 });

@@ -1,7 +1,10 @@
 import { useEffect, useState } from "react";
 import { Tabs, useRouter } from "expo-router";
+import Ionicons from "@expo/vector-icons/Ionicons";
 
+import { COLORS } from "@/constants/theme";
 import { ROUTES } from "@/constants/routes";
+import Typography from "@/components/Typography";
 import LogOutButton from "@/components/LogOutButton";
 
 const TabLayout = () => {
@@ -28,6 +31,8 @@ const TabLayout = () => {
       initialRouteName={ROUTES.notesList.getName()}
       screenOptions={{
         headerRight: () => <LogOutButton />,
+        tabBarActiveTintColor: COLORS.primary,
+        tabBarInactiveTintColor: COLORS.border,
       }}
     >
       <Tabs.Screen
@@ -39,13 +44,39 @@ const TabLayout = () => {
       <Tabs.Screen
         name={ROUTES.notesList.getName()}
         options={{
-          title: "Notes (list)",
+          title: "List",
+          headerTitle: "",
+          tabBarLabel: ({ children, color }) => (
+            <Typography
+              variant={"bodySmall"}
+              text={children}
+              customStyle={{
+                color,
+              }}
+            />
+          ),
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="list" color={color} size={size} />
+          ),
         }}
       />
       <Tabs.Screen
         name={ROUTES.notesMap.getName()}
         options={{
-          title: "Notes (map)",
+          title: "Map",
+          headerShown: false,
+          tabBarLabel: ({ children, color }) => (
+            <Typography
+              variant={"bodySmall"}
+              text={children}
+              customStyle={{
+                color,
+              }}
+            />
+          ),
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="map" color={color} size={size} />
+          ),
         }}
       />
     </Tabs>

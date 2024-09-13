@@ -34,6 +34,6 @@ const styles = StyleSheet.create({
   },
   icon: {
     fontSize: 20,
-    color: COLORS.black,
+    color: COLORS.primary,
   },
 });
